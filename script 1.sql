@@ -19,7 +19,7 @@ cpf CHAR(11),
 senha VARCHAR(50),
 fkGerente INT,
 	CONSTRAINT idGerenteUsuario
-    FOREIGN KEY(idGerente)
+    FOREIGN KEY(fkGerente)
     REFERENCES usuario(idUsuario)
 );
 
