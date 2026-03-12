@@ -17,7 +17,7 @@ nome VARCHAR(100),
 email VARCHAR(200),
 cpf CHAR(11),
 senha VARCHAR(50),
-idGerente INT,
+fkGerente INT,
 	CONSTRAINT idGerenteUsuario
     FOREIGN KEY(idGerente)
     REFERENCES usuario(idUsuario)
