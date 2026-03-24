@@ -23,11 +23,6 @@ fkGerente INT,
     REFERENCES usuario(idUsuario)
 );
 
-CREATE TABLE servidor(
-idServidor INT PRIMARY KEY AUTO_INCREMENT,
-tipoServidor VARCHAR(100)
-);
-
 CREATE TABLE dataCenter(
 idDataCenter INT PRIMARY KEY AUTO_INCREMENT,
 capacidadeServidores INT,
@@ -39,6 +34,16 @@ fkServidor INT,
 	CONSTRAINT fkDataCenterServidor
     FOREIGN KEY(fkServidor)
     REFERENCES servidor(idServidor)
+);
+
+CREATE TABLE servidor(
+idServidor INT PRIMARY KEY AUTO_INCREMENT,
+tipoServidor VARCHAR(100),
+estado VARCHAR(10) CHECK (estado IN	 ('Ativo', 'Inativo')),
+fkDataCenter INT,
+	CONSTRAINT idDataCenter
+    FOREIGN KEY(fkDataCenter)
+    REFERENCES datacenter(idDataCenter)
 );
 
 CREATE TABLE endereco(
