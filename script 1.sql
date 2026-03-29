@@ -7,64 +7,87 @@ USE smartData;
 
 CREATE TABLE empresa(
 idEmpresa INT PRIMARY KEY AUTO_INCREMENT,
-razaoSocial VARCHAR(100),
-cpnj CHAR(14)
+razaoSocial VARCHAR(100) NOT NULL,
+cnpj CHAR(14) NOT NULL,
+telefoneEmpresa CHAR(11) NOT NULL,
+tokenEmpresa CHAR(8) NOT NULL
 );
 
-CREATE TABLE usuario(
+CREATE TABLE papel (
+idPapel INT PRIMARY KEY AUTO_INCREMENT,
+nivel VARCHAR(45),
+descricao VARCHAR(80),
+fkEmpresa INT,
+	CONSTRAINT fkEmpresa
+    FOREIGN KEY(fkEmpresa)
+    REFERENCES empresa(idEmpresa)
+);
+
+CREATE TABLE usuario (
 idUsuario INT PRIMARY KEY AUTO_INCREMENT,
 nome VARCHAR(100),
 email VARCHAR(200),
 cpf CHAR(11),
 senha VARCHAR(50),
-fkGerente INT,
-	CONSTRAINT idGerenteUsuario
-    FOREIGN KEY(fkGerente)
-    REFERENCES usuario(idUsuario)
+fkPapelEmpresa INT,
+	CONSTRAINT fkPapelEmpresa
+    FOREIGN KEY(fkPapelEmpresa)
+    REFERENCES papel(idPapel)
 );
 
-CREATE TABLE dataCenter(
+CREATE TABLE datacenter (
 idDataCenter INT PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR(45),
 capacidadeServidores INT,
 fkUsuario INT,
-	CONSTRAINT fkDataCenterUsuario
+	CONSTRAINT fkUsuario
     FOREIGN KEY(fkUsuario)
-	REFERENCES usuario(idUsuario),
-fkServidor INT,
-	CONSTRAINT fkDataCenterServidor
-    FOREIGN KEY(fkServidor)
-    REFERENCES servidor(idServidor)
+	REFERENCES usuario(idUsuario)
+);
+
+CREATE TABLE zona (
+idZona INT PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR(45),
+fkDataCenter INT,
+	CONSTRAINT fkDataCenter
+    FOREIGN KEY(fkDataCenter)
+	REFERENCES datacenter(idDataCenter)
+);
+
+CREATE TABLE regiao(
+idRegiao INT PRIMARY KEY AUTO_INCREMENT,
+cep CHAR(8),
+numero VARCHAR(45),
+complemento VARCHAR(45),
+fkRegiaoEmpresa INT,
+	CONSTRAINT fkRegiaoEmpresa
+    FOREIGN KEY(fkRegiaoEmpresa)
+    REFERENCES empresa(idEmpresa),
+fkRegiaoDataCenter INT,
+	CONSTRAINT fkRegiaoDataCenter
+	FOREIGN KEY(fkRegiaoDataCenter)
+    REFERENCES datacenter(idDataCenter)
 );
 
 CREATE TABLE servidor(
 idServidor INT PRIMARY KEY AUTO_INCREMENT,
-tipoServidor VARCHAR(100),
+nome VARCHAR(45),
+tipo VARCHAR(100),
 estado VARCHAR(10) CHECK (estado IN	 ('Ativo', 'Inativo')),
-fkDataCenter INT,
-	CONSTRAINT idDataCenter
-    FOREIGN KEY(fkDataCenter)
-    REFERENCES datacenter(idDataCenter)
-);
-
-CREATE TABLE endereco(
-idEndereco INT PRIMARY KEY AUTO_INCREMENT,
-cep CHAR(8),
-numero VARCHAR(45),
-complemento VARCHAR(45),
-fkEmpresa INT,
-	CONSTRAINT fkEnderecoEmpresa
-    FOREIGN KEY(fkEmpresa)
-    REFERENCES empresa(idEmpresa),
-fkDataCenter INT,
-	CONSTRAINT fkEnderecoDataCenter
-	FOREIGN KEY(fkDataCenter)
-    REFERENCES dataCenter(idDataCenter)
+fkServidorDataCenter INT,
+	CONSTRAINT fkServidorDataCenter
+    FOREIGN KEY(fkServidorDataCenter)
+    REFERENCES datacenter(idDataCenter),
+fkZona INT,
+	CONSTRAINT fkZona
+    FOREIGN KEY(fkZona)
+    REFERENCES zona(idZona)
 );
 
 CREATE TABLE componentes(
 idComponente INT PRIMARY KEY AUTO_INCREMENT,
-nomeComponente VARCHAR(50),
-tipoComponente VARCHAR(45),
+nome VARCHAR(50),
+tipo VARCHAR(45),
 unidadeMedida VARCHAR(45),
 capacidadeMaxima FLOAT
 );
@@ -73,7 +96,29 @@ CREATE TABLE componentes_servidor(
 limite FLOAT,
 fkServidor INT,
 fkComponentes INT,
-	PRIMARY KEY (fkServidor, fkComponentes)
+	PRIMARY KEY (fkServidor, fkComponentes),
+    CONSTRAINT fk_compServ_servidor
+        FOREIGN KEY (fkServidor)
+        REFERENCES servidor(idServidor),
+
+    CONSTRAINT fk_compServ_componente
+        FOREIGN KEY (fkComponentes)
+        REFERENCES componentes(idComponente)
+);
+
+CREATE TABLE registro(
+idRegistro INT PRIMARY KEY AUTO_INCREMENT,
+cep CHAR(8),
+numero VARCHAR(45),
+complemento VARCHAR(45),
+fkRegistroServidor INT,
+	CONSTRAINT fkRegistroServidor
+    FOREIGN KEY(fkRegistroServidor)
+    REFERENCES servidor(idServidor),
+fkRegistroComponente INT,
+	CONSTRAINT fkRegistroComponente
+	FOREIGN KEY(fkRegistroComponente)
+    REFERENCES componentes(idComponente)
 );
 
 
