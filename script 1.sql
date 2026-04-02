@@ -1,5 +1,5 @@
 show databases;
-show tables;
+
 drop database smartData;
 
 CREATE DATABASE smartData;
@@ -29,9 +29,9 @@ nome VARCHAR(100),
 email VARCHAR(200),
 cpf CHAR(11),
 senha VARCHAR(50),
-fkPapelEmpresa INT,
-	CONSTRAINT fkPapelEmpresa
-    FOREIGN KEY(fkPapelEmpresa)
+fkPapel INT,
+	CONSTRAINT fkPapel
+    FOREIGN KEY(fkPapel)
     REFERENCES papel(idPapel)
 );
 
@@ -39,9 +39,9 @@ CREATE TABLE datacenter (
 idDataCenter INT PRIMARY KEY AUTO_INCREMENT,
 nome VARCHAR(45),
 capacidadeServidores INT,
-fkUsuario INT,
-	CONSTRAINT fkUsuario
-    FOREIGN KEY(fkUsuario)
+fkUsuarioDataCenter INT,
+	CONSTRAINT fkUsuarioDataCenter
+    FOREIGN KEY(fkUsuarioDataCenter)
 	REFERENCES usuario(idUsuario)
 );
 
@@ -51,7 +51,11 @@ nome VARCHAR(45),
 fkDataCenter INT,
 	CONSTRAINT fkDataCenter
     FOREIGN KEY(fkDataCenter)
-	REFERENCES datacenter(idDataCenter)
+	REFERENCES datacenter(idDataCenter),
+fkUsuarioZona INT,
+	CONSTRAINT fkUsuarioZona
+    FOREIGN KEY(fkUsuarioZona)
+    REFERENCES usuario(idUsuario)
 );
 
 CREATE TABLE regiao(
@@ -74,10 +78,6 @@ idServidor INT PRIMARY KEY AUTO_INCREMENT,
 nome VARCHAR(45),
 tipo VARCHAR(100),
 estado VARCHAR(10) CHECK (estado IN	 ('Ativo', 'Inativo')),
-fkServidorDataCenter INT,
-	CONSTRAINT fkServidorDataCenter
-    FOREIGN KEY(fkServidorDataCenter)
-    REFERENCES datacenter(idDataCenter),
 fkZona INT,
 	CONSTRAINT fkZona
     FOREIGN KEY(fkZona)
@@ -93,15 +93,16 @@ capacidadeMaxima FLOAT
 );
 
 CREATE TABLE componentes_servidor(
+idComponenteServidor INT,
 limite FLOAT,
 fkServidor INT,
 fkComponentes INT,
-	PRIMARY KEY (fkServidor, fkComponentes),
-    CONSTRAINT fk_compServ_servidor
+	PRIMARY KEY (idComponenteServidor, fkServidor, fkComponentes),
+    CONSTRAINT fkServidor
         FOREIGN KEY (fkServidor)
         REFERENCES servidor(idServidor),
 
-    CONSTRAINT fk_compServ_componente
+    CONSTRAINT fkComponentes
         FOREIGN KEY (fkComponentes)
         REFERENCES componentes(idComponente)
 );
