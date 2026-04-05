@@ -121,4 +121,38 @@ fkRegistroComponente INT,
     REFERENCES componentes(idComponente)
 );
 
+INSERT INTO empresa (razaoSocial, cnpj, telefoneEmpresa, tokenEmpresa) VALUES
+	('Steam', '12345678910119 ', '11123456789', 'STE12345');
+    
+INSERT INTO papel (nivel, descricao, fkEmpresa) VALUES
+	('Gestor', 'Acesso total ao sistema', 1),
+	('Analista', 'Monitoramento de servidores', 1);
+    
+INSERT INTO usuario (nome, email, cpf, senha, fkPapelEmpresa) VALUES
+	('Carlos Gestor', 'gestor@smartdata.com', '11111111111', '123456', 1),
+	('Ana Analista', 'analista@smartdata.com', '22222222222', '123456', 2);
 
+INSERT INTO datacenter (nome, capacidadeServidores, fkUsuario) VALUES
+	('ST-SP-01', 100, 1);
+    
+INSERT INTO zona (nome, fkDataCenter) VALUES
+	('Zona A', 1);
+    
+INSERT INTO regiao (cep, numero, complemento, fkRegiaoEmpresa, fkRegiaoDataCenter) VALUES
+	('12345678', '9101', 'Steam Sp', 1, 1);
+    
+INSERT INTO servidor (nome, tipo, estado, fkServidorDataCenter, fkZona) VALUES
+	('SERVIDOR-DC01-WEB-05', 'Web Server', 'Ativo', 1, 1);
+    
+INSERT INTO componentes (nome, tipo, unidadeMedida, capacidadeMaxima) VALUES
+	('CPU', 'Processador', '%', 100),
+	('RAM', 'Memoria', 'GB', 20),
+	('DISCO', 'Armazenamento', 'GB', 512);
+    
+INSERT INTO componentes_servidor (limite, fkServidor, fkComponentes) VALUES
+	(90, 1, 1),
+	(16, 1, 2),
+	(450, 1, 3);
+    
+INSERT INTO registro (cep, numero, complemento, fkRegistroServidor, fkRegistroComponente) VALUES
+('12345678', '9101', 'Deck 01', 1, 1);
