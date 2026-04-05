@@ -93,7 +93,7 @@ capacidadeMaxima FLOAT
 );
 
 CREATE TABLE componentes_servidor(
-idComponenteServidor INT,
+idComponenteServidor INT AUTO_INCREMENT,
 limite FLOAT,
 fkServidor INT,
 fkComponentes INT,
@@ -129,21 +129,21 @@ INSERT INTO papel (nivel, descricao, fkEmpresa) VALUES
 	('Gestor', 'Acesso total ao sistema', 1),
 	('Analista', 'Monitoramento de servidores', 1);
     
-INSERT INTO usuario (nome, email, cpf, senha, fkPapelEmpresa) VALUES
-	('Carlos Gestor', 'gestor@smartdata.com', '11111111111', '123456', 1),
-	('Ana Analista', 'analista@smartdata.com', '22222222222', '123456', 2);
+INSERT INTO usuario (nome, email, cpf, senha, fkPapel) VALUES
+	('Carlos Gestor', 'carloss@gmail.com', '12345678910', '123456', 1),
+	('Ana Analista', 'anaa@gmail.com', '10987654321', '123456', 2);
 
-INSERT INTO datacenter (nome, capacidadeServidores, fkUsuario) VALUES
+INSERT INTO datacenter (nome, capacidadeServidores, fkUsuarioDataCenter) VALUES
 	('ST-SP-01', 100, 1);
     
-INSERT INTO zona (nome, fkDataCenter) VALUES
-	('Zona A', 1);
+INSERT INTO zona (nome, fkDataCenter, fkUsuarioZona) VALUES
+	('Zona A', 1, 1);
     
 INSERT INTO regiao (cep, numero, complemento, fkRegiaoEmpresa, fkRegiaoDataCenter) VALUES
 	('12345678', '9101', 'Steam Sp', 1, 1);
     
-INSERT INTO servidor (nome, tipo, estado, fkServidorDataCenter, fkZona) VALUES
-	('SERVIDOR-DC01-WEB-05', 'Web Server', 'Ativo', 1, 1);
+INSERT INTO servidor (nome, tipo, estado, fkZona) VALUES
+	('SERVIDOR-DC01-WEB-05', 'Web Server', 'Ativo' , 1);
     
 INSERT INTO componentes (nome, tipo, unidadeMedida, capacidadeMaxima) VALUES
 	('CPU', 'Processador', '%', 100),
