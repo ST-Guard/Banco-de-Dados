@@ -1,6 +1,5 @@
 show databases;
 
-drop database smartData;
 
 CREATE DATABASE smartData;
 USE smartData;
@@ -28,7 +27,9 @@ idUsuario INT PRIMARY KEY AUTO_INCREMENT,
 nome VARCHAR(100),
 email VARCHAR(200),
 cpf CHAR(11),
+telefone VARCHAR(15),
 senha VARCHAR(50),
+status VARCHAR(20) DEFAULT 'Ativo',
 fkPapel INT,
 	CONSTRAINT fkPapel
     FOREIGN KEY(fkPapel)
@@ -51,11 +52,7 @@ nome VARCHAR(45),
 fkDataCenter INT,
 	CONSTRAINT fkDataCenter
     FOREIGN KEY(fkDataCenter)
-	REFERENCES datacenter(idDataCenter),
-fkUsuarioZona INT,
-	CONSTRAINT fkUsuarioZona
-    FOREIGN KEY(fkUsuarioZona)
-    REFERENCES usuario(idUsuario)
+	REFERENCES datacenter(idDataCenter)
 );
 
 CREATE TABLE regiao(
@@ -122,22 +119,32 @@ fkRegistroComponente INT,
     REFERENCES componentes(idComponente)
 );
 
+ALTER TABLE usuario
+ADD COLUMN fkZona INT,
+ADD CONSTRAINT fkUsuarioZona
+FOREIGN KEY (fkZona) REFERENCES zona(idZona);
+
 INSERT INTO empresa (razaoSocial, cnpj, telefoneEmpresa, tokenEmpresa) VALUES
 	('Steam', '12345678910119 ', '11123456789', 'STE12345');
     
 INSERT INTO papel (nivel, descricao, fkEmpresa) VALUES
 	('Gestor', 'Acesso total ao sistema', 1),
 	('Analista', 'Monitoramento de servidores', 1);
-    
-INSERT INTO usuario (nome, email, cpf, senha, fkPapel) VALUES
-	('Carlos Gestor', 'carloss@gmail.com', '12345678910', '123456', 1),
-	('Ana Analista', 'anaa@gmail.com', '10987654321', '123456', 2);
+
+
+INSERT INTO usuario (nome, email, cpf, telefone, senha, status, fkPapel, fkZona) VALUES
+('Carlos Gestor', 'carloss@gmail.com', '12345678910','(11) 9999-8888', '123456', 'Ativo', 1, NULL);
 
 INSERT INTO datacenter (nome, capacidadeServidores, fkUsuarioDataCenter) VALUES
-	('ST-SP-01', 100, 1);
-    
-INSERT INTO zona (nome, fkDataCenter, fkUsuarioZona) VALUES
-	('Zona A', 1, 1);
+('ST-SP-01', 100, 1);
+
+INSERT INTO zona (nome, fkDataCenter) VALUES
+('Zona A', 1),
+('Zona B', 1);
+
+INSERT INTO usuario (nome, email, cpf, telefone, senha, status, fkPapel, fkZona) VALUES
+('Ana Analista', 'anaa@gmail.com', '10987654321', '(11) 9999-7777', '123456', 'Ativo', 2, 1),
+('Miguel Analista', 'miguell@gmail.com', '14985559347', '(11) 9999-6666', '123456', 'Ativo', 2, 1);
     
 INSERT INTO regiao (cep, numero, complemento, fkRegiaoEmpresa, fkRegiaoDataCenter) VALUES
 	('12345678', '9101', 'Steam Sp', 1, 1);
@@ -157,3 +164,4 @@ INSERT INTO componentes_servidor (limite, fkServidor, fkComponentes) VALUES
     
 INSERT INTO registro (cep, numero, complemento, fkRegistroServidor, fkRegistroComponente) VALUES
 ('12345678', '9101', 'Deck 01', 1, 1);
+
