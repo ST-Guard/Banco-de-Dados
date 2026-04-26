@@ -1,6 +1,6 @@
 show databases;
 
-DROP DATABASE smartData;
+
 CREATE DATABASE smartData;
 USE smartData;
 
@@ -28,7 +28,7 @@ nome VARCHAR(100),
 imagem VARCHAR(255),
 email VARCHAR(200),
 cpf CHAR(11),
-telefone CHAR(11),
+telefone CHAR(15),
 senha VARCHAR(50),
 status VARCHAR(20) DEFAULT 'Ativo',
 fkPapel INT,
@@ -50,10 +50,6 @@ fkUsuarioDataCenter INT,
 CREATE TABLE zona (
 idZona INT PRIMARY KEY AUTO_INCREMENT,
 nome VARCHAR(45),
-fkUsuarioZona INT,
-	CONSTRAINT fkUsuarioZona
-    FOREIGN KEY(fkUsuarioZona)
-	REFERENCES usuario(idUsuario),
 fkDataCenter INT,
 	CONSTRAINT fkDataCenter
     FOREIGN KEY(fkDataCenter)
@@ -124,46 +120,54 @@ fkRegistroComponente INT,
     REFERENCES componentes(idComponente)
 );
 
+ALTER TABLE usuario
+ADD COLUMN fkZona INT,
+ADD CONSTRAINT fkUsuarioZona
+FOREIGN KEY (fkZona) REFERENCES zona(idZona);
+
 INSERT INTO empresa (razaoSocial, cnpj, telefoneEmpresa, tokenEmpresa) VALUES
-    ('Steam', '12345678910119', '11123456789', 'STE12345');
+	('Steam', '12345678910119', '11123456789', 'STE12345');
     
 INSERT INTO papel (nivel, descricao, fkEmpresa) VALUES
-    ('Gestor', 'Acesso total ao sistema', 1),
-    ('Analista', 'Monitoramento de servidores', 1);
+	('Gestor', 'Acesso total ao sistema', 1),
+	('Analista', 'Monitoramento de servidores', 1);
 
-INSERT INTO usuario (nome, email, cpf, telefone, senha, status, fkPapel) VALUES
-    ('Carlos Gestor', 'carloss@gmail.com', '12345678910', '11999998888', '123456', 'Ativo', 1),
-    ('Ana Analista', 'anaa@gmail.com', '10987654321', '11999997777', '123456', 'Ativo', 2),
-    ('Miguel Analista', 'miguell@gmail.com', '14985559347', '11999996666', '123456', 'Ativo', 2);
+
+INSERT INTO usuario (nome, email, cpf, telefone, senha, status, fkPapel, fkZona) VALUES
+('Carlos Gestor', 'carloss@gmail.com', '12345678910','(11) 9999-8888', '123456', 'Ativo', 1, NULL);
 
 INSERT INTO datacenter (nome, capacidadeServidores, fkUsuarioDataCenter) VALUES
-    ('ST-SP-01', 100, 1);
+('ST-SP-01', 100, 1);
 
-INSERT INTO zona (nome, fkUsuarioZona, fkDataCenter) VALUES
-    ('Zona A', 2, 1),
-    ('Zona B', 3, 1);
+INSERT INTO zona (nome, fkDataCenter) VALUES
+('Zona A', 1),
+('Zona B', 1);
 
+INSERT INTO usuario (nome, email, cpf, telefone, senha, status, fkPapel, fkZona) VALUES
+('Ana Analista', 'anaa@gmail.com', '10987654321', '(11) 9999-7777', '123456', 'Ativo', 2, 1),
+('Miguel Analista', 'miguell@gmail.com', '14985559347', '(11) 9999-6666', '123456', 'Ativo', 2, 1);
+    
 INSERT INTO regiao (cep, numero, complemento, estado, fkRegiaoEmpresa, fkRegiaoDataCenter) VALUES
-    ('12345678', '9101', 'Steam Sp', 'SP', 1, 1);
-
+	('12345678', '9101', 'Steam Sp', 'SP', 1, 1);
+    
 INSERT INTO servidor (nome, tipo, estado, fkZona) VALUES
-    ('SERVIDOR-DC01-WEB-05', 'Web Server', 'Ativo', 1);
-
+	('SERVIDOR-DC01-WEB-05', 'Web Server', 'Ativo', 1);
+    
 INSERT INTO componentes (nome, tipo, unidadeMedida, capacidadeMaxima) VALUES
-    ('CPU', 'Processador', '%', 100),
-    ('RAM', 'Memoria', 'GB', 20),
-    ('DISCO', 'Armazenamento', 'GB', 512);
-
+	('CPU', 'Processador', '%', 100),
+	('RAM', 'Memoria', 'GB', 20),
+	('DISCO', 'Armazenamento', 'GB', 512);
+    
 INSERT INTO componentes_servidor (limite, fkServidor, fkComponentes) VALUES
-    (90, 1, 1),
-    (16, 1, 2),
-    (450, 1, 3);
-
+	(90, 1, 1),
+	(16, 1, 2),
+	(450, 1, 3);
+    
 INSERT INTO registro (dataHora, valor, fkRegistroServidor, fkRegistroComponente) VALUES
     ('2025-08-19 10:00:00', 52, 1, 1),
     ('2025-08-19 10:00:00', 6.8, 1, 2),
     ('2025-08-19 10:00:00', 238, 1, 3);
-
+    
 create view vwBuscarDados AS
 	select u.idUsuario,
 		u.nome as nomePessoa,
@@ -175,9 +179,10 @@ create view vwBuscarDados AS
 		p.descricao as bio,
 		d.nome as nomeDataCenter,
 		z.nome as nomeZona
-		from papel p join usuario u
-			on p.idPapel = u.fkPapel
+        from usuario u
+        join papel p
+			on  p.idPapel = u.fkPapel
 		left join zona z
-			on u.idUsuario = z.fkUsuarioZona
+			on z.idZona = u.fkZona
 		left join dataCenter d
-			on u.idUsuario = d.fkUsuarioDataCenter;
+			on d.idDataCenter = z.fkDataCenter;
