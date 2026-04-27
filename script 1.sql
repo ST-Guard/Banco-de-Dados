@@ -49,7 +49,7 @@ fkUsuarioDataCenter INT,
 
 CREATE TABLE zona (
 idZona INT PRIMARY KEY AUTO_INCREMENT,
-nome VARCHAR(45),
+nome ENUM('Zona A', 'Zona B', 'Zona C') NOT NULL,
 fkDataCenter INT,
 	CONSTRAINT fkDataCenter
     FOREIGN KEY(fkDataCenter)
@@ -141,7 +141,8 @@ INSERT INTO datacenter (nome, capacidadeServidores, fkUsuarioDataCenter) VALUES
 
 INSERT INTO zona (nome, fkDataCenter) VALUES
 ('Zona A', 1),
-('Zona B', 1);
+('Zona B', 1),
+('Zona C', 1);
 
 INSERT INTO usuario (nome, email, cpf, telefone, senha, status, fkPapel, fkZona) VALUES
 ('Ana Analista', 'anaa@gmail.com', '10987654321', '(11) 9999-7777', '123456', 'Ativo', 2, 1),
@@ -186,3 +187,6 @@ create view vwBuscarDados AS
 			on z.idZona = u.fkZona
 		left join dataCenter d
 			on d.idDataCenter = z.fkDataCenter;
+            
+
+	
