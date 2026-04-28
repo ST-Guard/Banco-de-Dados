@@ -195,3 +195,4 @@ create view vwBuscarDados AS
 			on d.idDataCenter = z.fkDataCenter;
             
 select * from contato_inicial;
+
