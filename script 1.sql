@@ -1,6 +1,5 @@
 show databases;
 
-
 CREATE DATABASE smartData;
 USE smartData;
 
@@ -120,6 +119,13 @@ fkRegistroComponente INT,
     REFERENCES componentes(idComponente)
 );
 
+CREATE TABLE contato_inicial(
+idContato_inicial INT PRIMARY KEY AUTO_INCREMENT,
+nome_usuario VARCHAR(45),
+email_usuario VARCHAR(45),
+mensagem_usuario VARCHAR(45)
+);
+
 ALTER TABLE usuario
 ADD COLUMN fkZona INT,
 ADD CONSTRAINT fkUsuarioZona
@@ -134,7 +140,7 @@ INSERT INTO papel (nivel, descricao, fkEmpresa) VALUES
 
 
 INSERT INTO usuario (nome, email, cpf, telefone, senha, status, fkPapel, fkZona) VALUES
-('Carlos Gestor', 'carloss@gmail.com', '12345678910','(11) 9999-8888', '123456', 'Ativo', 1, NULL);
+('Maria Gestora', 'maria@gmail.com', '12345678910','(11) 9999-8888', '123456', 'Ativo', 1, NULL);
 
 INSERT INTO datacenter (nome, capacidadeServidores, fkUsuarioDataCenter) VALUES
 ('ST-SP-01', 100, 1);
@@ -145,8 +151,8 @@ INSERT INTO zona (nome, fkDataCenter) VALUES
 ('Zona C', 1);
 
 INSERT INTO usuario (nome, email, cpf, telefone, senha, status, fkPapel, fkZona) VALUES
-('Ana Analista', 'anaa@gmail.com', '10987654321', '(11) 9999-7777', '123456', 'Ativo', 2, 1),
-('Miguel Analista', 'miguell@gmail.com', '14985559347', '(11) 9999-6666', '123456', 'Ativo', 2, 1);
+('Erick Analista', 'erick@gmail.com', '10987654321', '(11) 9999-7777', '123456', 'Ativo', 2, 1),
+('Miguel Analista', 'miguel@gmail.com', '14985559347', '(11) 9999-6666', '123456', 'Ativo', 2, 1);
     
 INSERT INTO regiao (cep, numero, complemento, estado, fkRegiaoEmpresa, fkRegiaoDataCenter) VALUES
 	('12345678', '9101', 'Steam Sp', 'SP', 1, 1);
