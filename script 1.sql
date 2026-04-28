@@ -194,5 +194,4 @@ create view vwBuscarDados AS
 		left join dataCenter d
 			on d.idDataCenter = z.fkDataCenter;
             
-
-	
+select * from contato_inicial;
