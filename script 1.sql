@@ -1,5 +1,5 @@
 show databases;
-
+DROP DATABASE smartdata;
 CREATE DATABASE smartData;
 USE smartData;
 
@@ -163,12 +163,14 @@ INSERT INTO servidor (nome, tipo, estado, fkZona) VALUES
 INSERT INTO componentes (nome, tipo, unidadeMedida, capacidadeMaxima) VALUES
 	('CPU', 'Processador', '%', 100),
 	('RAM', 'Memoria', 'GB', 20),
-	('DISCO', 'Armazenamento', 'GB', 512);
+	('DISCO', 'Armazenamento', 'GB', 512),
+    ('REDE', 'LATENCIA', 'MBps', 50);
     
 INSERT INTO componentes_servidor (limite, fkServidor, fkComponentes) VALUES
 	(90, 1, 1),
 	(16, 1, 2),
-	(450, 1, 3);
+	(450, 1, 3),
+	(40, 1, 4);
     
 INSERT INTO registro (dataHora, valor, fkRegistroServidor, fkRegistroComponente) VALUES
     ('2025-08-19 10:00:00', 52, 1, 1),
