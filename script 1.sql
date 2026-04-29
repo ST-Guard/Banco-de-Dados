@@ -158,7 +158,10 @@ INSERT INTO regiao (cep, numero, complemento, estado, fkRegiaoEmpresa, fkRegiaoD
 	('12345678', '9101', 'Steam Sp', 'SP', 1, 1);
     
 INSERT INTO servidor (nome, tipo, estado, fkZona) VALUES
-	('SERVIDOR-DC01-WEB-05', 'Web Server', 'Ativo', 1);
+	('SRV-DC01-WEB-05', 'Web', 'Ativo', 1),
+    ('SRV-DC01-DB-12', 'DB', 'Ativo', 1),
+    ('SRV-FK02-GM-02', 'GM', 'Ativo', 1),
+    ('SRV-DC01-WEB-08', 'WEB', 'Ativo', 1);
     
 INSERT INTO componentes (nome, tipo, unidadeMedida, capacidadeMaxima) VALUES
 	('CPU', 'Processador', '%', 100),
@@ -193,8 +196,15 @@ create view vwBuscarDados AS
 			on  p.idPapel = u.fkPapel
 		left join zona z
 			on z.idZona = u.fkZona
-		left join dataCenter d
-			on d.idDataCenter = z.fkDataCenter;
+		LEFT JOIN datacenter d
+			ON (
+				(p.nivel = 'Analista' AND d.idDataCenter = z.fkDataCenter)
+				OR
+				(p.nivel = 'Gestor' AND d.fkUsuarioDataCenter = u.idUsuario)
+			);
             
 select * from contato_inicial;
+
+select * from vwBuscarDados
+
 
